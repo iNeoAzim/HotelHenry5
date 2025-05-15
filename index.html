@@ -12,6 +12,19 @@
             background-size: cover;
             min-height: 100vh;
         }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.3);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .container, .booking-card {
+            position: relative;
+            z-index: 1;
+        }
+        }
         .booking-card {
             margin: 20px 0;
             padding: 20px;
@@ -30,7 +43,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Réservation Hôtel Henry</h1>
+        <h1 class="text-center mb-4">Réservation Hôtel George 5</h1>
         <p class="text-muted">Indiquez vos dates de réservation - Toute annulation doit se faire 48h avant</p>
         
         <div class="row">
@@ -88,7 +101,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Right Section -->
             <div class="col-md-6">
                 <div class="booking-card">
