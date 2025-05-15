@@ -55,15 +55,15 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label>Adulte:</label>
-                                <input type="number" class="form-control" value="2">
+                                <input type="number" class="form-control" id="adulteInput" value="2">
                             </div>
                             <div class="col">
                                 <label>Enfant:</label>
-                                <input type="number" class="form-control" value="2">
+                                <input type="number" class="form-control" id="enfantInput" min="0" value="2">
                             </div>
                             <div class="col">
                                 <label>Chambre:</label>
-                                <input type="number" class="form-control" value="0">
+                                <input type="number" class="form-control" id="chambreInput" value="0">
                             </div>
                         </div>
                         
@@ -79,15 +79,10 @@
                             </label>
                         </div>
                         
-                        <div class="age-input">
+                        <div class="age-input" id="ageInputContainer" style="display:none;">
                             <label>Âge des enfants:</label>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="number" class="form-control" placeholder="Âge" value="5">
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control" placeholder="Âge" value="6">
-                                </div>
+                            <div class="row" id="ageInputsRow">
+                                <!-- Les champs d'âge seront générés ici -->
                             </div>
                         </div>
                     </div>
@@ -116,11 +111,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Sélection des éléments du formulaire
-        const adulteInput = document.querySelector('input[placeholder="Adulte:"]') || document.querySelectorAll('.form-control')[2];
-        const enfantInput = document.querySelector('input[placeholder="Enfant:"]') || document.querySelectorAll('.form-control')[3];
-        const chambreInput = document.querySelector('input[placeholder="Chambre:"]') || document.querySelectorAll('.form-control')[4];
+        const adulteInput = document.getElementById('adulteInput');
+        const enfantInput = document.getElementById('enfantInput');
+        const chambreInput = document.getElementById('chambreInput');
         const travailInput = document.getElementById('travail');
-        const ageInputs = document.querySelectorAll('.age-input input');
+        const ageInputContainer = document.getElementById('ageInputContainer');
+        const ageInputsRow = document.getElementById('ageInputsRow');
 
         // Sélection des éléments de confirmation
         const confirmAdulte = document.querySelector('p:nth-child(2) strong');
@@ -131,6 +127,33 @@
         // Sélection des boutons
         const btnRechercher = document.querySelector('.btn.btn-primary');
         const btnEffacer = document.querySelector('.btn.btn-secondary');
+
+        // Fonction pour générer dynamiquement les champs d'âge
+        function updateAgeInputs() {
+            const nbEnfants = parseInt(enfantInput.value) || 0;
+            ageInputsRow.innerHTML = '';
+            if (nbEnfants > 0) {
+                ageInputContainer.style.display = '';
+                for (let i = 0; i < nbEnfants; i++) {
+                    const col = document.createElement('div');
+                    col.className = 'col mb-2';
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.className = 'form-control';
+                    input.placeholder = `Âge enfant ${i+1}`;
+                    input.min = 0;
+                    col.appendChild(input);
+                    ageInputsRow.appendChild(col);
+                }
+            } else {
+                ageInputContainer.style.display = 'none';
+            }
+        }
+
+        // Mettre à jour dynamiquement les champs d'âge quand le nombre d'enfants change
+        enfantInput.addEventListener('input', updateAgeInputs);
+        // Initialiser à l'ouverture
+        updateAgeInputs();
 
         btnRechercher.addEventListener('click', function() {
             // Met à jour la confirmation avec les valeurs du formulaire
@@ -146,7 +169,7 @@
             enfantInput.value = 0;
             chambreInput.value = 0;
             travailInput.checked = false;
-            ageInputs.forEach(input => input.value = '');
+            updateAgeInputs();
             // Réinitialise la confirmation
             confirmAdulte.textContent = 0;
             confirmEnfant.textContent = 0;
